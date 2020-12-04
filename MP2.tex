@@ -151,17 +151,6 @@ x <- rbinom(1000,size = 100, prob=0.23)
        \begin{table}[H]\centering
           \footnotesize Table 1.1: Values for $a$ and $b$ used in the truncation functions $Y$ and $Z$
 
-      %     \vspace*{0.3cm}
-      %     \begin{tabular}{l|ll} \toprule
-      %       Case  & $a$   &   $b$\\ \midrule
-      %       1     & 22  &   25\\
-      %       2     & 20  &   30\\
-      %       3     & 15  &   35\\
-      %       4     & 10  &   40\\
-      %       5     & 0   &   50\\ \bottomrule
-      %     \end{tabular}
-      %  \end{table}
-
        \vspace*{0.3cm}
           \begin{tabular}{l|lllll} \toprule
             Case  & 1   &  2  &  3  &  4   &  5\\ \midrule
@@ -219,6 +208,109 @@ x <- rbinom(1000,size = 100, prob=0.23)
        Moreover, as $a\rightarrow -\infty$ and $b \rightarrow \infty$, the distribution of the truncated random variables $Y$ and $Z$ becomes similar to $f$, it approaches the original (untruncated) distribution. Beyond certain values, the truncation functions will have no effect to the random variable, as seen in cases 5.1 and 5.2 where $a=0$ and $b=50$.
 
     \end{enumerate}
+    \newpage
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \section*{Problem 2}
+
+    \paragraph*{Airlines find that each passenger who reserves a seat fails to turn up with probability $q$ independently of the other passengers. So Airline $A$ always sell $n$ tickets for their $n-1$ seat aeroplane while Airline $B$ always sell $2n$ tickets for their $2n-2$ seat aeroplane. Which is more often over-booked?}
+
+    \hspace*{0.5cm} \vspace*{0.5cm}
+    \begin{enumerate}[label=\Alph*]
+      \item \textbf{Algorithm}
+      
+        \begin{enumerate}[label=\arabic*.]
+          \item Assign values to the given variables.
+          \item Use the formula in getting the probability and combination.
+          \item Observe the results of both Airlines after you perform the operations.
+          \item Identify which Airline is often overbooked.
+        \end{enumerate}
+
+      \vspace*{0.5cm}
+      \item \textbf{R Code}
+      
+        \begin{lstlisting}
+#Number3
+
+#To solve this problem with ease, we assign values to the given variables:
+#Let q be 10% the probability that a passenger did not show up
+q<- 0.10
+#Let n be 10 the passengers Airline A can hold.
+n<- 10
+#Let 1-q be the probability of passengers that shows up 
+
+#COMPUTE
+
+Prob_of_Airline_A<- (1-q)^n #Use this formula, (1-q)^n, to get the probability that all 10 passengers shows up.
+Prob_of_Airline_A
+
+Prob_of_Airline_B<- (1-q)^(2*n)+.1^1 * .9^19 *factorial(20)/factorial(19)*factorial(1) #Use this formula, (1-q)^(2*n)+.1^1 * .9^19 *(20!/19!*1!) to get the probability of all 20 or 19 passengers shows up.  
+Prob_of_Airline_B
+
+#Airline B (0.391747) is often over-booked than Airline A (0.3486784)
+        \end{lstlisting}
+
+      \vspace*{0.5cm}
+      \item \textbf{Mathematical Calculations}
+      
+        We assign values to the variables given to the problem, so that we can solve the problem with ease;
+
+        \hspace*{0.5cm} Let $q$ be 0.10, the probability that a passenger did not show up.\\
+        \hspace*{0.5cm} Let $n$ be 10, the passengers Airline A can hold.\\
+        First,
+        \begin{equation*}
+          1-q=1-0.10=0.90
+        \end{equation*}
+
+        0.90 is the probability that the passenger will show since there is only 0.10 probability that they will not show up. There are 10 passengers that has 0.90 probability of showing up. So, we will use this formula, $(1-q)^n$, to obtain the overbooking probability of Airline A.
+
+        We proceed in computing the probability of Airline A by,
+        \begin{equation*}
+          P^a = (1-q)^n = 0.90^{10} = 0.34867844
+        \end{equation*}
+
+        For Airline B the probability of it to be overbook happens when all 20 passengers show up or when 19 of the20 passengers show up for the 18 seats.
+
+        The probability that all 20 passengers will show up is,
+        \begin{equation*}
+          (1-q)^n=0.90^{20} = 0.121576655
+        \end{equation*}
+
+        The probability that 19 passengers will show up is,
+        \begin{equation*}
+          (q^1) \times (1-q)^{19} \times 
+            \left( {\begin{array}{*{20}c}
+               2n  \\
+               2n-1  \\
+            \end{array}} \right)
+             = 0.1^1 \times 0.9^{19} \times 
+             \left( {\begin{array}{*{20}c}
+              20  \\
+              1  \\
+           \end{array}} \right)
+            = 0.270170344
+        \end{equation*}
+        
+        We considered  "$q^1$" since there is a probability that one passenger will not show up and also, {\footnotesize “$\left( {\begin{array}{c}
+          2n  \\
+          2n-1  \\
+       \end{array}} \right)$”} since it determines the possible combinations of selecting 1 out of 20. 
+
+       To determine the probability of Airline B is by,
+       \begin{align*}
+         P^b &= (1-9)^n + (q^1) \times (1-q)^{19} \times 
+         \left( {\begin{array}{*{20}c}
+          2n  \\
+          2n-1  \\
+          \end{array}} \right)\\
+          &= 0. 121576655 + 0 .270170344\\
+          &= 0.391746998
+       \end{align*}
+
+       $\therefore$ Airline B (0.391746998) is often overbooked than Airline A (0.34867844).
+    \end{enumerate}
+
     \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -328,6 +420,17 @@ number_3 = function(n){
         Given that Paul has $6n$ rolls and must have $n$ number of six, while Yves has $6(n + 1)$ rolls and must have $n+1$ number of sixes. Using the function coded for number 3, which simulated the situation. Yves has a 85.28\% chance to have $n + 1$ sixes given that he has $6(n + 1)$ rolls, while Paul has only 59.57\% chance to have $n$ sixes given that he has $6n$ rolls. Which makes Yves more likely to have $n + 1$ sixes, rather than Paul having $n$ sixes.
     \end{enumerate}
 
+    \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \section*{Problem 4}
+    \paragraph*{Each member of a group of n players rolls a die.}
+    \begin{enumerate}[label=(\alph*)]
+      \item For any pair of players who throw the same number, the group scores 1 point. Find the mean and variance of the total score of the group.
+      \item Find the mean and variance of the total score if any pair of players who throw the same number scores that number.
+    \end{enumerate}
+
+
 
 
     \newpage
@@ -415,23 +518,26 @@ manyNicePackages <- function(k, n) {
         % \vspace*{0.5cm} 
         \item \textbf{Simulation and Analysis}
 
-        Running the \code{nicePackage} function above with $k=101$ (101 unique objects), we get a mean of 5.81 days. Additionally, a k of only 13 yields a mean of 2.92 days. A visualization of the number of days passed before getting the $n+1^{th}$ object can be seen in Figure 5.1 and Figure 5.2.
+        Running the \code{nicePackage} function above with $k=101$ (101 unique objects), we get a mean of 5.81 days. Additionally, a k of only 13 yields a mean of 2.92 days. A visualization of the number of days passed before getting the $n+1^{th}$ object can be seen in Figure 5.2 and Figure 5.3.
         \begin{figure}[H]
           \centering
+
+          \includegraphics[scale=0.7]{nicePackage.png}
+          \caption*{\footnotesize Figure 5.1: RStudio output for the \code{nicePackage} simulation}
           \includegraphics*[scale=0.4]{fig5.1.png}
-          \caption*{\footnotesize Figure 5.1: with $k=101$}
+          \caption*{\footnotesize Figure 5.2: \code{nicePackage} with $k=101$}
 
           \includegraphics*[scale=0.4]{fig5.2.png}
-          \caption*{\footnotesize Figure 5.2: with $k=13$}
+          \caption*{\footnotesize Figure 5.3: \code{nicePackage} with $k=13$}
           
         \end{figure}
 
-        Moreover, running the \code{manyNicePackage} function with $k=101$ (101 unique objects), $n=50$ (50 iterations of the \code{nicePackage} function), and removing the \code{set.seed(6626068)} in the \code{nicePackage} function, we get a mean of 622.08 days. While a $k=13$ and $n=50$ results to a mean of 55.36 days. It is important to note that the values for $k$ and $n$ were chosen such that the simulation covers from a relatively small to a relatively large number of objects.
+        Moreover, running the \code{manyNicePackages} function with $k=101$ (101 unique objects), $n=50$ (50 iterations of the \code{nicePackage} function), and removing the \code{set.seed(6626068)} in the \code{nicePackage} function, we get a mean of 622.08 days. While a $k=13$ and $n=50$ results to a mean of 55.36 days. It is important to note that the values for $k$ and $n$ were chosen such that the simulation covers from a relatively small to a relatively large number of objects.
         \vspace*{0.8cm}
         \begin{figure*}[h]
           \centering
           \includegraphics[scale=0.7]{manyNicePackage.png}
-          \caption*{\footnotesize Figure 5.3: RStudio output for the \code{manyNicePackage} simulation}
+          \caption*{\footnotesize Figure 5.4: RStudio output for the \code{manyNicePackages} simulation}
         \end{figure*}
 
     \end{enumerate}
