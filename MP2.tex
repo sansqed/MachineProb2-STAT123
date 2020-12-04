@@ -132,7 +132,7 @@ ZTruncation <- function (x,b){
 }
         \end{lstlisting}
         \vspace*{0.5cm}
-       \item \textbf{Simulation and Analysis} 
+       \item \textbf{Simulation} 
        
        For this simulation, we assume $X$ has a binomial distribution $f$. Using \code{set.seed(141421356)} (for replication of results), we generate 1000 ($n=1000$) random values for $X$ with a size of 100 and a probability of 0.23, shown in Code 1.2. A histogram of the randomly generated values can be seen in Figure 1.1.
        \begin{lstlisting}[title=\footnotesize Code 1.2: Initialization of $X$]
@@ -202,7 +202,9 @@ x <- rbinom(1000,size = 100, prob=0.23)
           \caption*{\footnotesize Case 5.2: Truncated Z using $b=50$}
         \end{subfigure}
        \end{figure}
-       \vspace{5cm}
+      \newpage
+    \item \textbf{Conclusion}
+    
        Analyzing the graphs found in the previous page, we can infer that the truncation function $Y$ limits the values for the random variable to be within the interval $[a, b]$. The function prevents the values to exceed beyond the interval by capping the values at the boundaries. Meanwhile the truncation function $Z$ limits the random variable to be within the interval $[-b, b]$ by converting the values that exceeded the interval to 0. 
 
        Moreover, as $a\rightarrow -\infty$ and $b \rightarrow \infty$, the distribution of the truncated random variables $Y$ and $Z$ becomes similar to $f$, it approaches the original (untruncated) distribution. Beyond certain values, the truncation functions will have no effect to the random variable, as seen in cases 5.1 and 5.2 where $a=0$ and $b=50$.
@@ -230,8 +232,8 @@ x <- rbinom(1000,size = 100, prob=0.23)
       \vspace*{0.5cm}
       \item \textbf{R Code}
       
-        \begin{lstlisting}
-#Number3
+        \begin{lstlisting}[title=\footnotesize Code 2.1: The Entire Cpde]
+#Number2
 
 #To solve this problem with ease, we assign values to the given variables:
 #Let q be 10% the probability that a passenger did not show up
@@ -407,8 +409,8 @@ number_3 = function(n){
 
         % \vspace*{0.5cm}
         \begin{align*}
-          \mbox{Let} p&=\mbox{probability of Paul getting $n$ ammount/s of six}\\
-          \mbox{Let} y&=\mbox{probability of Yves getting $n+1$ ammount/s of six}\\\\
+          \mbox{Let} p&=\mbox{probability of Paul getting $n$ amount/s of six}\\
+          \mbox{Let} y&=\mbox{probability of Yves getting $n+1$ amount/s of six}\\\\
           p&=\frac{0.7868+0.5170+0.8439+0.7661+0.1869+0.4735}{6}\\
           &=0.5957=59.57\%\\\\
           y&=\frac{0.9110+0.8151+0.6780+0.8247+0.9747+0.9133}{6}\\
@@ -430,9 +432,90 @@ number_3 = function(n){
       \item Find the mean and variance of the total score if any pair of players who throw the same number scores that number.
     \end{enumerate}
 
+    
+    \begin{enumerate}[label=\Alph*]
+      \item \textbf{Algorithm and R Code}
+      
+      \begin{lstlisting}[title=\footnotesize Code 4.1: The Entire Code]
+#PROBLEM 4
+library(distrEX)
 
+set.seed(1134)
 
+n<-100 #assuming 100 will be the highest possible number of players.
 
+#SOLUTION-----------------------------------------------------------------------
+mem_throwList <-c(rep(NA,n))
+for(k in 1: length(mem_throwList)){mem_throwList[k] <-sample(c(1:6),1)}
+
+a4_x_list <-c(rep(0,6))
+for(t in 1:length(a4_x_list)){
+  for(i in 1:length(mem_throwList)){
+    if(mem_throwList[i]==t){a4_x_list[t] <-a4_x_list[t] + 1}
+  }
+}
+
+a4_ex_STList <-c(rep(NA,6))
+for(k in 1:6){a4_ex_STList[k] <-(a4_x_list[k]*(a4_x_list[k]-1))/2}
+a4_x_scoreTotal <-sum(a4_ex_STList)
+
+a4_e_Scorelist_means <-c(rep(NA,6))
+for(k in 1:6){a4_e_Scorelist_means[k] <-((n^2)-n)/72}
+a4_e_ScoreTotal_mean <-sum(a4_e_Scorelist_means)
+
+            \end{lstlisting}
+          
+        \vspace*{0.5cm}
+        \item \textbf{Simulation and Analysis}
+        
+        \textit{Solving for (a),}
+        \begin{lstlisting}[title=\footnotesize Code 4.2: Solving for (a)]
+#A)-----------------------------------------------------------------------------
+b4_expect <-1/6 #expectation of the total score of the group.
+print(b4_expect)
+b4_var <-b4_expect*(1-b4_expect) #variance of the total score of the group.
+print(b4_var)
+        \end{lstlisting}
+    
+
+    \begin{figure*}[h]
+      \centering
+      \includegraphics[width=0.4\textwidth]{fig4.1.png}\\
+      \includegraphics[width=0.4\textwidth]{fig4.1(1).png}
+      \caption*{\footnotesize Figure 4.1: RStudio output for Code 4.2}
+    \end{figure*}
+    
+    \noindent
+    Let $S_i$ denote the score obtained by the players who throw $i$, $i=1,2,...,6$ and let $X_i$ be the number of people who throw $i$ and $1_{ij}$ be the indicator function which is 1 only if the $j^{th}$ person throw $i$. So, we have $X_i = \sum^{n}_{j=1}1_{ij}$. $E[S_i|X_i]=X_i\frac{(X_i-1)}{2}$ and so $E[S_i]=\frac{(n^2-2)}{72}$ and therefore $E[S]=\frac{(n^2-n)}{12}$, where $S=\sum^{6}_{i=1}S_i$ is the total score.
+
+    \vspace*{1cm}
+    \textit{Solving for (b),}
+    \begin{lstlisting}[title=\footnotesize Code 4.3: Solving for (b)]
+#B)-----------------------------------------------------------------------------
+b4_scoreExp <-choose(n,2)*b4_expect #mean of the score of the total score if any pair of players who throw
+                                    #the same number scores that number.
+print(b4_scoreExp)
+b4_scoreVar <-choose(n,2)*b4_var #variance of the total score if any pair of players who throw
+                                  #the same number scores that number.
+    \end{lstlisting}
+
+    \begin{figure*}[h]
+      \centering
+      \includegraphics{fig4.2.png}
+      \caption*{\footnotesize Figure 4.2: RStudio output for Code 4.3}
+    \end{figure*}
+
+    \noindent
+    \normalsize
+    The indicator variables $Y_{ij}$ that are 1 if $i$ and $j$ throw the same number of pairwise independent and can thus be used to find both the expectation and the variance. The expectation of $Y_{ij}$ is $\frac{1}{6}$ and the variance is $\frac{1}{6} \times (1 \div \frac{1}{6})=\frac{5}{36}$, so the expectation of the score is $\left( {\begin{array}{c}
+      n  \\
+      2  \\
+   \end{array}} \right) \cdot \frac{1}{6}=\frac{n(n-1)}{12}$ and the variance of the score is $\left( {\begin{array}{c}
+    n \\
+    2  \\
+ \end{array}} \right) \cdot \frac{5}{36} = \frac{5n(n-1)}{72}$
+
+    \end{enumerate}
     \newpage
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -522,7 +605,7 @@ manyNicePackages <- function(k, n) {
         \begin{figure}[H]
           \centering
 
-          \includegraphics[scale=0.7]{nicePackage.png}
+          \includegraphics[scale=0.8]{nicePackage.png}
           \caption*{\footnotesize Figure 5.1: RStudio output for the \code{nicePackage} simulation}
           \includegraphics*[scale=0.4]{fig5.1.png}
           \caption*{\footnotesize Figure 5.2: \code{nicePackage} with $k=101$}
@@ -533,10 +616,10 @@ manyNicePackages <- function(k, n) {
         \end{figure}
 
         Moreover, running the \code{manyNicePackages} function with $k=101$ (101 unique objects), $n=50$ (50 iterations of the \code{nicePackage} function), and removing the \code{set.seed(6626068)} in the \code{nicePackage} function, we get a mean of 622.08 days. While a $k=13$ and $n=50$ results to a mean of 55.36 days. It is important to note that the values for $k$ and $n$ were chosen such that the simulation covers from a relatively small to a relatively large number of objects.
-        \vspace*{0.8cm}
+        \vspace*{0.3cm}
         \begin{figure*}[h]
           \centering
-          \includegraphics[scale=0.7]{manyNicePackage.png}
+          \includegraphics[scale=0.8]{manyNicePackage.png}
           \caption*{\footnotesize Figure 5.4: RStudio output for the \code{manyNicePackages} simulation}
         \end{figure*}
 
